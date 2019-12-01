@@ -19,7 +19,10 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc -O- | a
 # We add postgis as well to prevent build errors (that we dont see on local builds)
 # on docker hub e.g.
 # The following packages have unmet dependencies:
-RUN apt-get update; apt-get install -y postgresql-client-12 postgresql-common postgresql-12 postgresql-12-postgis-3  netcat postgresql-12-ogr-fdw postgresql-12-postgis-3-scripts
+RUN apt-get update; apt-get install -y postgresql-server-dev-12 cmake build-essential g++ libboost-graph-dev zip postgresql-client-12 postgresql-common postgresql-12 postgresql-12-postgis-3  netcat postgresql-12-ogr-fdw postgresql-12-postgis-3-scripts
+RUN wget -O pgrouting.zip https://codeload.github.com/pgRouting/pgrouting/zip/v3.0.0-beta
+RUN unzip pgrouting.zip
+RUN cd pgrouting-3.0.0-beta && mkdir build && cd build && cmake ../ && make -j 4 && make install
 
 # Open port 5432 so linked containers can see them
 EXPOSE 5432
